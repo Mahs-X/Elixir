@@ -11,13 +11,18 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    const isTouch =
+      typeof window !== "undefined" &&
+      ("ontouchstart" in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0));
+
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: isTouch ? 1.0 : 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 1.2,
+      touchMultiplier: isTouch ? 1.05 : 1.2,
+      syncTouch: true,
     });
 
     lenisRef.current = lenis;
